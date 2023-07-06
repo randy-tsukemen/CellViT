@@ -67,7 +67,7 @@ class ExperimentCellViT(BaseExperiment):
         super().__init__(default_conf, checkpoint)
         self.load_dataset_setup(dataset_path=self.default_conf["data"]["dataset_path"])
 
-    def run_experiment(self) -> tuple[Path, dict, nn.Module, dict]:
+    def run_experiment(self) -> Tuple[Path, dict, nn.Module, dict]:
         """Main Experiment Code"""
         ### Setup
         # close loggers

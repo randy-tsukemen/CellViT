@@ -219,7 +219,7 @@ class InferenceCellViT:
 
     def setup_patch_inference(
         self, test_folds: List[int] = None
-    ) -> tuple[
+    ) -> Tuple[
         Union[
             CellViT,
             CellViTUnshared,
