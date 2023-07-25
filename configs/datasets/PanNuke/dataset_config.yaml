@@ -1,7 +1,8 @@
 tissue_types:
-  "blood_vessel": 0
-  "glomerulus": 1
-  "unsure": 2
+  "Kidney": 0
 
 nuclei_types:
   "Background": 0
+  "blood_vessel": 1
+  "glomerulus": 2
+  "unsure": 3

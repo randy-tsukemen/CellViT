@@ -63,18 +63,18 @@ model:
 
 # loss function settings (best shown by an example). See all implemented loss functions in base_ml.base_loss module
 loss:
-  nuclei_binary_map:        # Name of the branch. Possible branches are "nuclei_binary_map", "hv_map", "nuclei_type_map", "tissue_types". If not defined default HoverNet settings are used [str]
-    bce:                    # Name of the loss [str]
-      loss_fn: xentropy_loss  # Loss_fn, name is defined in LOSS_DICT in base_ml.base_loss module [str]
-      weight: 1               # Weight parameter [int] [Optional, defaults to 1]
-      args:                   # Parameters for the loss function if necessary. Does not need to be set, can also be empty. Just given as an example here
-        arg1:                 # 1. Parameter etc. (Name must match to the initialization parameter given for the loss)
-    dice:                   # Name of the loss [str]
-      loss_fn: dice_loss    # Loss_fn, name is defined in LOSS_DICT in base_ml.base_loss module [str]
-      weight: 1             # Weight parameter [int] [Optional, defaults to 1]
-    focaltverskyloss:       # Name of the loss [str]
-      loss_fn: FocalTverskyLoss # Loss_fn, name is defined in LOSS_DICT in base_ml.base_loss module [str]
-      weight: 1             # Weight parameter [int] [Optional, defaults to 1]
+  # nuclei_binary_map:        # Name of the branch. Possible branches are "nuclei_binary_map", "hv_map", "nuclei_type_map", "tissue_types". If not defined default HoverNet settings are used [str]
+  #   bce:                    # Name of the loss [str]
+  #     loss_fn: xentropy_loss  # Loss_fn, name is defined in LOSS_DICT in base_ml.base_loss module [str]
+  #     weight: 1               # Weight parameter [int] [Optional, defaults to 1]
+  #     args:                   # Parameters for the loss function if necessary. Does not need to be set, can also be empty. Just given as an example here
+  #       arg1:                 # 1. Parameter etc. (Name must match to the initialization parameter given for the loss)
+  #   dice:                   # Name of the loss [str]
+  #     loss_fn: dice_loss    # Loss_fn, name is defined in LOSS_DICT in base_ml.base_loss module [str]
+  #     weight: 1             # Weight parameter [int] [Optional, defaults to 1]
+  #   focaltverskyloss:       # Name of the loss [str]
+  #     loss_fn: FocalTverskyLoss # Loss_fn, name is defined in LOSS_DICT in base_ml.base_loss module [str]
+  #     weight: 1             # Weight parameter [int] [Optional, defaults to 1]
       # optional parameters, not implemented yet
   # hv_map:                   another branch
   # nuclei_type_map:          another branch

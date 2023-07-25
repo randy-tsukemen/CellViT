@@ -5,6 +5,8 @@ __pycache__/
 *npy
 *.png
 *pth
+wandb/
+log_dir/
 # development
 .vscode
 
