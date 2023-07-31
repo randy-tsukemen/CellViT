@@ -11,7 +11,7 @@
 
 import logging
 from pathlib import Path
-from typing import Callable, Tuple, Union
+from typing import Callable, Tuple, Union, List
 
 import numpy as np
 import pandas as pd
@@ -31,7 +31,7 @@ class PanNukeDataset(CellDataset):
     def __init__(
         self,
         dataset_path: Union[Path, str],
-        folds: Union[int, list[int]],
+        folds: Union[int, List[int]],
         transforms: Callable = None,
     ) -> None:
         """PanNuke dataset

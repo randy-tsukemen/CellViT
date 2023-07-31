@@ -2,7 +2,11 @@
 __pycache__/
 # *.py[cod]
 # *$py.class
-
+*npy
+*.png
+*pth
+wandb/
+log_dir/
 # development
 .vscode
 

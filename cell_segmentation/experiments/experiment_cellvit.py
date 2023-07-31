@@ -67,7 +67,7 @@ class ExperimentCellViT(BaseExperiment):
         super().__init__(default_conf, checkpoint)
         self.load_dataset_setup(dataset_path=self.default_conf["data"]["dataset_path"])
 
-    def run_experiment(self) -> tuple[Path, dict, nn.Module, dict]:
+    def run_experiment(self) -> Tuple[Path, dict, nn.Module, dict]:
         """Main Experiment Code"""
         ### Setup
         # close loggers
@@ -100,7 +100,7 @@ class ExperimentCellViT(BaseExperiment):
             allow_val_change=True,
             id=wandb_run_id,
             resume=resume,
-            settings=wandb.Settings(start_method="fork"),
+            settings=wandb.Settings(start_method="thread"),
         )
 
         # get ids
@@ -187,7 +187,7 @@ class ExperimentCellViT(BaseExperiment):
         ### Data handling
         train_transforms, val_transforms = self.get_transforms(
             self.run_conf["transformations"],
-            input_shape=self.run_conf["data"].get("input_shape", 256),
+            input_shape=self.run_conf["data"].get("input_shape", 512),
         )
 
         dataset_name = self.run_conf["data"]["dataset"]
@@ -209,15 +209,15 @@ class ExperimentCellViT(BaseExperiment):
             train_dataset,
             batch_size=self.run_conf["training"]["batch_size"],
             sampler=training_sampler,
-            num_workers=16,
+            # num_workers=16,
             pin_memory=False,
             worker_init_fn=self.seed_worker,
         )
 
         val_dataloader = DataLoader(
             val_dataset,
-            batch_size=128,
-            num_workers=16,
+            batch_size=self.run_conf["training"]["batch_size"],
+            # num_workers=16,
             pin_memory=True,
             worker_init_fn=self.seed_worker,
         )
@@ -363,7 +363,7 @@ class ExperimentCellViT(BaseExperiment):
                 }
         else:
             loss_fn_dict["nuclei_binary_map"] = {
-                "bce": {"loss_fn": retrieve_loss_fn("xentropy_loss"), "weight": 1},
+                "bce": {"loss_fn": retrieve_loss_fn("xentropy_loss"), "weight": 0.2},
                 "dice": {"loss_fn": retrieve_loss_fn("dice_loss"), "weight": 1},
             }
         if "hv_map" in loss_fn_settings.keys():
@@ -376,8 +376,8 @@ class ExperimentCellViT(BaseExperiment):
                 }
         else:
             loss_fn_dict["hv_map"] = {
-                "mse": {"loss_fn": retrieve_loss_fn("mse_loss_maps"), "weight": 1},
-                "msge": {"loss_fn": retrieve_loss_fn("msge_loss_maps"), "weight": 1},
+                "mse": {"loss_fn": retrieve_loss_fn("mse_loss_maps"), "weight": 2.5},
+                "msge": {"loss_fn": retrieve_loss_fn("msge_loss_maps"), "weight": 8},
             }
         if "nuclei_type_map" in loss_fn_settings.keys():
             loss_fn_dict["nuclei_type_map"] = {}
@@ -389,7 +389,7 @@ class ExperimentCellViT(BaseExperiment):
                 }
         else:
             loss_fn_dict["nuclei_type_map"] = {
-                "bce": {"loss_fn": retrieve_loss_fn("xentropy_loss"), "weight": 1},
+                "bce": {"loss_fn": retrieve_loss_fn("xentropy_loss"), "weight": 0.2},
                 "dice": {"loss_fn": retrieve_loss_fn("dice_loss"), "weight": 1},
             }
         if "tissue_types" in loss_fn_settings.keys():
@@ -593,7 +593,13 @@ class ExperimentCellViT(BaseExperiment):
                     f"Loading pretrained CellViT model from path: {pretrained_model}"
                 )
                 cellvit_pretrained = torch.load(pretrained_model, map_location="cpu")
-                self.logger.info(model.load_state_dict(cellvit_pretrained, strict=True))
+                cellvit_pretrained = cellvit_pretrained["model_state_dict"]
+                last_head = ['nuclei_type_maps_decoder.decoder0_header.2.weight', 
+                             'nuclei_type_maps_decoder.decoder0_header.2.bias',
+                             'classifier_head.weight',
+                             'classifier_head.bias']
+                cellvit_pretrained = {k: v for k, v in cellvit_pretrained.items() if k not in last_head}
+                self.logger.info(model.load_state_dict(cellvit_pretrained, strict=False))
             model.freeze_encoder()
             self.logger.info(f"Loaded CellViT-SAM model with backbone: {backbone_type}")
 

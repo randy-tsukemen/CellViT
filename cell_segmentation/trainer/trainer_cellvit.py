@@ -115,6 +115,7 @@ class CellViTTrainer(BaseTrainer):
                     f"{branch}_{loss_name}", ":.4f"
                 )
         self.batch_avg_tissue_acc = AverageMeter("Batch_avg_tissue_ACC", ":4.f")
+        self.scaler = torch.cuda.amp.GradScaler(enabled=True)
 
     def train_epoch(
         self, epoch: int, train_dataloader: DataLoader, unfreeze_epoch: int = 50
@@ -149,6 +150,7 @@ class CellViTTrainer(BaseTrainer):
 
         # randomly select a batch that should be displayed
         select_example_image = int(torch.randint(0, len(train_dataloader), (1,)))
+        # select_example_image = 0
 
         train_loop = tqdm.tqdm(enumerate(train_dataloader), total=len(train_dataloader))
 
@@ -605,6 +607,7 @@ class CellViTTrainer(BaseTrainer):
                 "instance_map",
                 "instance_types",
                 "instance_types_nuclei",
+                "tissue_types"
             ]:  # TODO: rather select branch from loss functions?
                 continue
             branch_loss_fns = self.loss_fn_dict[branch]
@@ -861,8 +864,8 @@ class CellViTTrainer(BaseTrainer):
             plt.Figure: Figure with example patches
         """
 
+        num_images = 2
         assert num_images <= imgs.shape[0]
-        num_images = 4
 
         h = ground_truth["hv_map"].shape[1]
         w = ground_truth["hv_map"].shape[2]

@@ -206,13 +206,14 @@ class FocalTverskyLoss(nn.Module):
         beta_t: float = 0.3,
         gamma_f: float = 4 / 3,
         smooth: float = 1e-6,
+        num_classes: int = 2,
     ) -> None:
         super().__init__()
         self.alpha_t = alpha_t
         self.beta_t = beta_t
         self.gamma_f = gamma_f
         self.smooth = smooth
-        self.num_classes = 2
+        self.num_classes = num_classes
 
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         """Loss calculation
@@ -231,9 +232,9 @@ class FocalTverskyLoss(nn.Module):
             raise ValueError(
                 "Predictions must be a logit tensor with the last dimension shape beeing equal to the number of classes"
             )
-        if len(target.shape) != len(input.shape):
-            # convert the targets to onehot
-            target = F.one_hot(target, num_classes=self.num_classes)
+        # if len(target.shape) != len(input.shape):
+        #     # convert the targets to onehot
+        #     target = F.one_hot(target.to(torch.int64), num_classes=self.num_classes)
 
         # flatten
         target = target.view(-1)
