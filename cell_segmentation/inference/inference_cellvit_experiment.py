@@ -295,7 +295,7 @@ class InferenceCellViT:
         inference_dataloader = DataLoader(
             inference_dataset,
             batch_size=128,
-            num_workers=12,
+            # num_workers=12,
             pin_memory=False,
             shuffle=False,
         )
@@ -1218,14 +1218,14 @@ class InferenceCellViTParser:
             required=True,
         )
         parser.add_argument(
-            "--gpu", type=int, help="Cuda-GPU ID for inference", default=5
+            "--gpu", type=int, help="Cuda-GPU ID for inference", default=0
         )
         parser.add_argument(
             "--magnification",
             type=int,
             help="Dataset Magnification. Either 20 or 40. Default: 40",
             choices=[20, 40],
-            default=20,
+            default=40,
         )
         parser.add_argument(
             "--plots",
